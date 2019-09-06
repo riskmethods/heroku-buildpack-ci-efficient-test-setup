@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# bin/compile <build-dir> <cache-dir>
+
+BUILD_DIR=$1
+ENV_DIR=$3
+
+# Heroku puts env var values into files.
+# So we read the first line of env var files to get the values.
+if [ "$(head -n 1 $ENV_DIR/CI_NODE_INDEX)" != "$(head -n 1 $ENV_DIR/JS_TESTS_NODE_INDEX)" ]; then
+  echo "-----> This dyno is not running JS related tests."
+  echo "-----> Making 'package.json' file empty for a faster test setup..."
+  > "$BUILD_DIR/package.json"
+  echo "{}" >> "$BUILD_DIR/package.json"
+fi
